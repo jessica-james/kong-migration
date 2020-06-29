@@ -1,0 +1,7 @@
+*
+!plugins-json
+!routes-json
+!services-json
+!templates
+!templates/*
+!get-routes.py
