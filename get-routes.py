@@ -122,7 +122,17 @@ def create_new_plugins_data(plugins_json):
         keycloak_client = json.dumps(config['client_id'])
         keycloak_client = str(keycloak_client).strip("[]")
         print(keycloak_client)
+        config_scope_string = ''
         config_scope = config['scopes']
+        for scope in config_scope:
+            if len(config_scope) == 2:
+                if scope == 'openid':
+                    config_scope_string += f'{scope} '
+                else:
+                    config_scope_string += scope
+            else:
+                config_scope_string += scope
+        print(config_scope_string)
         enabled = x.get('enabled', 'null')
         enabled = json.dumps(enabled)
         # name = x.get('name', 'null')
@@ -131,7 +141,7 @@ def create_new_plugins_data(plugins_json):
         route_id = json.dumps(route_id)
     # render the plugins template
         output = template.render(plugins_name="oidc", plugins_enabled=enabled, config_keycloak_client=keycloak_client,
-                                 plugins_route=route_id, config_scope=config_scope)
+                                 plugins_route=route_id, config_scope=config_scope_string)
         if not path.isdir(f'./plugins-json/{x["id"]}/'):
             mkdir(f'./plugins-json/{x["id"]}')
         with open(f'./plugins-json/{x["id"]}/plugins.json', 'w') as plugin:
@@ -143,8 +153,8 @@ def create_new_plugins_data(plugins_json):
 
 
 if __name__ == '__main__':
-    kong_url = 'http://crate-kong.formal-chicken-dinner.crate.farm/api'
-    kong_admin_key = #api key needed
+    kong_url = #kong_url e.g. 'http://crate-kong.formal-chicken-dinner.crate.farm'
+    kong_admin_key = #kong_api_key
 
     services_json = get_kong_services(kong_url, kong_admin_key)
     routes_json = get_kong_routes(kong_url, kong_admin_key)
