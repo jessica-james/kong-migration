@@ -1,7 +1,22 @@
 {
-    "name": {{ plugins_name }},
+    "name": "{{ plugins_name }}",
     "enabled": {{ plugins_enabled }},
-    "config": {{ plugins_config }},
+    "config": {
+        "bearer_only": "no",
+        "client_id": {{ config_keycloak_client }},
+        "client_secret": "1234",
+        "discovery": "https://sso.ciscocrate.com/auth/realms/prod/.well-known/openid-configuration",
+        "inject_auth_bearer": "yes",
+        "logout_path": "logout",
+        "offline_token_header": "offline-token",
+        "realm": "prod",
+        "redirect_after_logout_uri": "/",
+        "response_type": "code",
+        "scope": "{{ config_scope }}",
+        "ssl_verify": "no",
+        "token_endpoint": "https://sso.ciscocrate.com/auth/realms/prod/protocol/openid-connect/token",
+        "token_endpoint_auth_method": "client_secret_post"
+    },
     "route": {
         "id": {{ plugins_route }}
         }

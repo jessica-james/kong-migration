@@ -1,0 +1,43 @@
+version: '2'
+services:
+  kong-lb:
+    image: rancher/lb-service-haproxy:v0.7.15
+    labels:
+      io.rancher.container.agent.role: environmentAdmin,agent
+      io.rancher.container.agent_service.drain_provider: 'true'
+      crate.service.name: crate-kong.kong-lb
+      io.rancher.container.create_agent: 'true'
+  kong-database:
+    image: dockerhub.cisco.com/crate-docker/kong-service-db:v0.34-1-alpine-r3
+    labels:
+      crate.service.name: crate-kong.kong-database
+  apikey-service:
+    image: dockerhub.cisco.com/crate-docker/apikey-service:v1.0.2
+    labels:
+      crate.service.name: crate-kong.apikey-service
+  kong:
+    image: dockerhub.cisco.com/crate-docker/kong-service-api:v0.34-1-alpine-r3
+    environment:
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_ADMIN_API_URI: http://crate-kong.formal-chicken-dinner.crate.farm/api
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_GUI_LISTEN: 0.0.0.0:8002
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001
+      KONG_DATABASE: postgres
+      KONG_LICENSE_DATA: '{"license":{"signature":"7a7b047bae4ef9a4db47b6688776d774adb25c0b33ba0f3188fb2bc0e590373dc43f174e2356bf8f3d983575cb05df62108d6b7f526eede26d92be99b69a66d1","payload":{"customer":"Cisco
+        Systems, Inc.","license_creation_date":"2018-07-31","product_subscription":"Kong
+        Enterprise Edition","admin_seats":"3","support_plan":"Premier","license_expiration_date":"2020-07-12","license_key":"0014100000sqv4RAAQ_a1V41000006MRxgEAG"},"version":1}}'
+      KONG_PG_HOST: kong-database
+      KONG_PORTAL: 'on'
+      KONG_PORTAL_API_LISTEN: 0.0.0.0:8004
+      KONG_PORTAL_GUI_LISTEN: 0.0.0.0:8003
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+      KONG_PROXY_LISTEN: 0.0.0.0:8000
+      KONG_TRUSTED_IPS: 0.0.0.0/0,::/0
+      KONG_VITALS: 'false'
+    links:
+    - kong-database:kong-database
+    labels:
+      crate.service.name: crate-kong.kong
+

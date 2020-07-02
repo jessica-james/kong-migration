@@ -1,0 +1,59 @@
+version: '2'
+volumes:
+  kong-postgres-data:
+    driver: local
+services:
+  runwait-helper:
+    image: dockerhub.cisco.com/pds-dockersquad/runwait-helper:v1.0.1
+    labels:
+      io.rancher.container.start_once: 'true'
+  kong-lb:
+    image: rancher/lb-service-haproxy:v0.7.15
+    labels:
+      io.rancher.container.agent.role: environmentAdmin,agent
+      io.rancher.container.agent_service.drain_provider: 'true'
+      crate.service.name: crate-kong.kong-lb
+      io.rancher.container.create_agent: 'true'
+  kong-database:
+    image: dockerhub.cisco.com/crate-docker/kong-service-db:1.0.4-alpine-r2
+    volumes:
+      - kong-postgres-data:/var/lib/kong_db
+    labels:
+      crate.service.name: crate-kong.kong-database
+  apikey-service:
+    image: dockerhub.cisco.com/crate-docker/apikey-service:v1.0.3
+    labels:
+      crate.service.name: crate-kong.apikey-service
+  kong:
+    image: dockerhub.cisco.com/crate-docker/kong-service-api:1.0.4-alpine-r2
+    environment:
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: kong-database
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+      KONG_PROXY_LISTEN: 0.0.0.0:8000
+      KONG_TRUSTED_IPS: 0.0.0.0/0,::/0
+    links:
+    - kong-database:kong-database
+    labels:
+      crate.service.name: crate-kong.kong
+  kong-postconfig:
+    image: dockerhub.cisco.com/crate-docker/kong-service-postconfig:1.0.4-alpine-r2
+    links:
+      - kong
+    volumes_from:
+      - runwait-helper
+    entrypoint:
+      - /opt/crate/runwait-helper/entrypoint.sh
+    environment:
+      KONG_API_HOST: 'crate-kong.formal-chicken-dinner.crate.farm'
+      KONG_API_KEY: '14_Little_Known_Ski_Jumping_Tips_From_Elon_Musk'
+      NEXT_ENTRYPOINT: /init-kong.sh
+      START_CONDITION: nc -z -w1 kong 8001
+      START_RETRY_INTERVAL: '2'
+    labels:
+      io.rancher.sidekicks: runwait-helper
+      io.rancher.container.start_once: 'true'

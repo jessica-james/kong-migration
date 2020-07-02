@@ -4,4 +4,6 @@
 !services-json
 !templates
 !templates/*
-!get-routes.py
+!*.py
+!old-docker-compose.yml
+!new-docker-compose.yml
