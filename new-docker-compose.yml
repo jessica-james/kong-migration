@@ -49,8 +49,8 @@ services:
     entrypoint:
       - /opt/crate/runwait-helper/entrypoint.sh
     environment:
-      KONG_API_HOST: 'crate-kong.formal-chicken-dinner.crate.farm'
-      KONG_API_KEY: '14_Little_Known_Ski_Jumping_Tips_From_Elon_Musk'
+      KONG_API_HOST: #Kong URL
+      KONG_API_KEY: #Kong Admin Key
       NEXT_ENTRYPOINT: /init-kong.sh
       START_CONDITION: nc -z -w1 kong 8001
       START_RETRY_INTERVAL: '2'
