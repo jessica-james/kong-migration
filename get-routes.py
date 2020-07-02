@@ -64,6 +64,8 @@ def create_new_services_data(services_json):
         output = template.render(service_name=name, service_protocol=protocol, service_port=port, service_host=host,
                                  service_connect_timeout=connect_timeout, service_id=id,
                                  service_write_timeout=write_timeout, service_read_timeout=read_timeout)
+        if not path.isdir('./services-json'):
+            mkdir('./services-json')
         if not path.isdir(f'./services-json/{x["id"]}/'):
             mkdir(f'./services-json/{x["id"]}')
         with open(f'./services-json/{x["id"]}/services.json', 'w') as service:
@@ -103,6 +105,8 @@ def create_new_routes_data(routes_json):
         output = template.render(route_protocol=protocols, route_methods=methods, route_hosts=hosts,
                                  route_id=route_id, route_service_id=service_id, route_preserve_host=preserve_host,
                                  route_regex_priority=regex_priority, route_paths=paths, route_strip_path=strip_path)
+        if not path.isdir('./routes-json'):
+            mkdir('./routes-json')
         if not path.isdir(f'./routes-json/{x["id"]}/'):
             mkdir(f'./routes-json/{x["id"]}/')
         with open(f'./routes-json/{x["id"]}/routes.json', 'w') as route:
@@ -135,13 +139,13 @@ def create_new_plugins_data(plugins_json):
         print(config_scope_string)
         enabled = x.get('enabled', 'null')
         enabled = json.dumps(enabled)
-        # name = x.get('name', 'null')
-        # name = json.dumps(name)
         route_id = x.get('route_id', 'null')
         route_id = json.dumps(route_id)
     # render the plugins template
         output = template.render(plugins_name="oidc", plugins_enabled=enabled, config_keycloak_client=keycloak_client,
                                  plugins_route=route_id, config_scope=config_scope_string)
+        if not path.isdir('./plugins-json'):
+            mkdir('./plugins-json')
         if not path.isdir(f'./plugins-json/{x["id"]}/'):
             mkdir(f'./plugins-json/{x["id"]}')
         with open(f'./plugins-json/{x["id"]}/plugins.json', 'w') as plugin:
