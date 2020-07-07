@@ -24,9 +24,7 @@ services:
       KONG_ADMIN_GUI_LISTEN: 0.0.0.0:8002
       KONG_ADMIN_LISTEN: 0.0.0.0:8001
       KONG_DATABASE: postgres
-      KONG_LICENSE_DATA: '{"license":{"signature":"7a7b047bae4ef9a4db47b6688776d774adb25c0b33ba0f3188fb2bc0e590373dc43f174e2356bf8f3d983575cb05df62108d6b7f526eede26d92be99b69a66d1","payload":{"customer":"Cisco
-        Systems, Inc.","license_creation_date":"2018-07-31","product_subscription":"Kong
-        Enterprise Edition","admin_seats":"3","support_plan":"Premier","license_expiration_date":"2020-07-12","license_key":"0014100000sqv4RAAQ_a1V41000006MRxgEAG"},"version":1}}'
+      KONG_LICENSE_DATA: 'license'
       KONG_PG_HOST: kong-database
       KONG_PORTAL: 'on'
       KONG_PORTAL_API_LISTEN: 0.0.0.0:8004
