@@ -11,5 +11,5 @@ def get_rancher_client():
     if 'RANCHER_SECRET_KEY' not in os.environ:
         raise Exception('RANCHER_SECRET_KEY env var must be set')
     return gdapi.Client(url=os.getenv('RANCHER_API_URL'),
-                        access_key=os.getenv('RANCHER_ACCESS_KEY'),
-                        secret_key=os.getenv('RANCHER_SECRET_KEY'))
+                  access_key=os.getenv('RANCHER_ACCESS_KEY'),
+                  secret_key=os.getenv('RANCHER_SECRET_KEY'))
